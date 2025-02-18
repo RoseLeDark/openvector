@@ -6,16 +6,15 @@ project('OpenVecTor', ['cpp', 'c'],
 project_description = 'An example shared library'
 
 project_headers = [
-  'include/OpenVecTor.hpp'
+  'include/OVT.h',
+  'include/OVTUtils.h'
 ]
 
 project_source_files = [
-  'src/OpenVecTor.cpp'
+  'src/OVT.c',
+  'src/OVTUtils.c'
 ]
 
-project_test_files = [
-  'tests/src/tests.cpp',
-]
 
 build_args = [
 ]
@@ -33,13 +32,6 @@ build_args += [
   '-DPROJECT_NAME=' + meson.project_name(),
   '-DPROJECT_VERSION=' + meson.project_version(),
 ]
-
-# Only make public interfaces visible
-if target_machine.system() == 'windows' or target_machine.system() == 'cygwin'
-  build_args += '-DOPENVECTOR_PUBLIC="__declspec(dllexport)"'
-else
-  build_args += '-DOPENVECTOR_PUBLIC=__attribute__((visibility("default")))'
-endif
 
 project_target = shared_library(
   meson.project_name(),
@@ -64,7 +56,7 @@ set_variable(meson.project_name() + '_dep', project_dep)
 
 # Make this library usable from the system's
 # package manager.
-install_headers(project_headers, subdir : meson.project_name())
+install_headers(project_headers, subdir : 'OpenVT')
 
 pkg_mod = import('pkgconfig')
 pkg_mod.generate(
@@ -74,22 +66,3 @@ pkg_mod.generate(
   subdirs : meson.project_name(),
   libraries : project_target,
 )
-
-
-# ==========
-# Unit Tests
-# ==========
-
-if not meson.is_subproject()
-  add_languages('cpp')
-  subdir('tests')
-
-  test('all_tests',
-    executable(
-      'run_tests',
-      files(project_test_files),
-      dependencies : [project_dep, test_dep],
-      install : false
-    )
-  )
-endif

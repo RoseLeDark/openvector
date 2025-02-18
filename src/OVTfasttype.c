@@ -1,3 +1,6 @@
+//  SPDX-FileCopyrightText: 2025 Amber-Sophia Schröck 
+//  SPDX-License-Identifier: MIT
+
 #include <OVTfasttype.h>
 #include <string.h>
 
@@ -159,5 +162,5 @@ VECTORAPI ovt_bool_t APIENTRY ovt_fast_type_less_eq(const volatile ovt_void_t *a
     ovt_bool_t _equal =  ovt_fast_type_equal(a, b);
     ovt_bool_t _less= ovt_fast_type_less(a, b);
 
-    return _equal == OVT_TRUE && _greater == OVT_TRUE;
+    return _equal == OVT_TRUE && _less == OVT_TRUE;
 }

@@ -1,3 +1,5 @@
+//  SPDX-FileCopyrightText: 2025 Amber-Sophia Schröck 
+//  SPDX-License-Identifier: MIT
 #ifndef __vector_fast_type_h_
 #define __vector_fast_type_h_ 1
 

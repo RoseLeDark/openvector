@@ -1,3 +1,7 @@
+//  SPDX-FileCopyrightText: 2025 Amber-Sophia Schröck 
+//  SPDX-License-Identifier: MIT
+
+
 #ifndef __vector_base_h_
 #define __vector_base_h_ 1
 

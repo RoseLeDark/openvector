@@ -1,3 +1,6 @@
+//  SPDX-FileCopyrightText: 2025 Amber-Sophia Schröck 
+//  SPDX-License-Identifier: MIT
+
 #include "OVTUtils.h"
 
 #include <string.h>

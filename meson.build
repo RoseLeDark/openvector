@@ -1,24 +1,28 @@
-project('OpenVecTor', ['cpp', 'c'],
+project('OpenVeTr', ['cpp', 'c'],
           version: '0.1.0',
     meson_version: '>= 1.0.0',
-  default_options: [ 'warning_level=2', 'werror=false', 'cpp_std=gnu++2a', ],
+  default_options: [ 'warning_level=2', 'werror=false', 'cpp_std=gnu++2a', 'c_std=c2x' ],
 )
-project_description = 'An example shared library'
+project_description = 'A libary for easy vector with simd'
 
 project_headers = [
+  'include/internal/OVTplatform.h',
+  'include/internal/OVTsimd.h',
   'include/OVT.h',
-  'include/OVTUtils.h'
+  'include/OVTUtils.h',
+  'include/OVTfasttype.h'
 ]
 
 project_source_files = [
   'src/OVT.c',
-  'src/OVTUtils.c'
+  'src/OVTUtils.c',
+  'src/OVTfasttype.c'
 ]
 
 
 build_args = [
+  '-mavx'
 ]
-
 
 # ===================================================================
 
@@ -31,6 +35,7 @@ public_headers = include_directories('include')
 build_args += [
   '-DPROJECT_NAME=' + meson.project_name(),
   '-DPROJECT_VERSION=' + meson.project_version(),
+  '-mavx',
 ]
 
 project_target = shared_library(

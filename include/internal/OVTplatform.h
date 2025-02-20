@@ -1,0 +1,219 @@
+#ifndef __vector_platform_h 
+#define __vector_platform_h 1
+
+#define OPENVECTOR_TARGET_WINDOWS           0
+#define OPENVECTOR_TARGET_LINUX             1
+#define OPENVECTOR_TARGET_ANDROID           2
+
+#define OPENVECTOR_COMPILER_MSVC            1 
+#define OPENVECTOR_COMPILER_CLANGCL         2
+#define OPENVECTOR_COMPILER_INTEL           3
+#define OPENVECTOR_COMPILER_INTEL_LLVM      4
+#define OPENVECTOR_COMPILER_GCC             5
+
+#define OPENVECTOR_ARCH_X86_32              1
+#define OPENVECTOR_ARCH_X86_64              2
+#define OPENVECTOR_ARCH_PPC                 3
+#define OPENVECTOR_ARCH_PPC_64              4
+#define OPENVECTOR_ARCH_ARM                 5
+#define OPENVECTOR_ARCH_ARM64               6
+#define OPENVECTOR_ARCH_LOONGARCH64         7
+#define OPENVECTOR_ARCH_LOONGARCH32         8
+#define OPENVECTOR_ARCH_RISCV32             9
+#define OPENVECTOR_ARCH_RISCV64            10
+
+#define OPENVECTOR_LITTLE_ENDIAN            1
+#define OPENVECTOR_BIG_ENDIAN               0
+
+#define OPENVECTOR_TECHNIQ_FALLBACK -1
+#define OPENVECTOR_TECHNIQ_SSE2      1
+#define OPENVECTOR_TECHNIQ_SSE3      2
+#define OPENVECTOR_TECHNIQ_SSE41     3
+#define OPENVECTOR_TECHNIQ_SSE42     4
+#define OPENVECTOR_TECHNIQ_AVX       5
+#define OPENVECTOR_TECHNIQ_AVX2      6
+#define OPENVECTOR_TECHNIQ_AVX512    7
+#define OPENVECTOR_TECHNIQ_NEON      8
+#define OPENVECTOR_TECHNIQ_NEON64    9
+#define OPENVECTOR_TECHNIQ_SVE      10
+#define OPENVECTOR_TECHNIQ_SVE2     11
+
+
+#define OPENVECTOR_TECHNIQ_VULKAN   (OPENVECTOR_TECHNIQ_SVE2 + 1)
+#define OPENVECTOR_TECHNIQ_OPEMCL   (OPENVECTOR_TECHNIQ_SVE2 + 2)
+#define OPENVECTOR_TECHNIQ_USER     (OPENVECTOR_TECHNIQ_SVE2 + 3)
+
+///////// DO NOT EDIT AFTER THIS!!!!! 
+
+#if defined(_WIN32)
+    #define OPENVECTOR_TARGET_SYSTEM OPENVECTOR_TARGET_WINDOWS
+#elif defined(__ANDROID__)
+    #define OPENVECTOR_TARGET_SYSTEM OPENVECTOR_TARGET_ANDROID
+#elif (defined(__STDC_VERSION__) && __STDC_VERSION__ >= 199901L) || defined(__GNUC__) || defined(__SCO__) || defined(__USLC__)
+    #define OPENVECTOR_TARGET_SYSTEM OPENVECTOR_TARGET_LINUX
+#endif
+
+#if !defined(OPENVECTOR_TARGET_SYSTEM)
+#error "No compatibler OS found!"
+#endif
+
+#if OPENVECTOR_TARGET_SYSTEM == OPENVECTOR_TARGET_WINDOWS && !defined(__clang__)
+#define OPENVECTOR_COMPILER     OPENVECTOR_COMPILER_MSVC
+#endif
+
+#if OPENVECTOR_TARGET_SYSTEM == OPENVECTOR_TARGET_WINDOWS && defined(__clang__)
+#define OPENVECTOR_COMPILER     OPENVECTOR_COMPILER_CLANGCL
+#endif
+
+#ifdef __INTEL_COMPILER
+#define OPENVECTOR_COMPILER     OPENVECTOR_COMPILER_INTEL
+#endif
+
+#ifdef __INTEL_LLVM_COMPILER
+#define OPENVECTOR_COMPILER     OPENVECTOR_COMPILER_INTEL_LLVM
+#endif
+
+#ifdef __GNUC__
+#define OPENVECTOR_COMPILER     OPENVECTOR_COMPILER_GCC
+#endif
+
+
+#if !defined(OPENVECTOR_COMPILER)
+#error "No compatibler compiler found!"
+#endif
+
+// -- ARCH
+#if defined(__i386__) || defined(_M_IX86)
+#define OPENVECTOR_ARCH             OPENVECTOR_ARCH_X86_32  
+#endif
+
+#if defined(__x86_64__) || defined(_M_X64)
+#define OPENVECTOR_ARCH             OPENVECTOR_ARCH_X86_64  
+#endif
+
+
+#if defined(__powerpc64__) || defined(_M_PPC) || defined(__powerpc__)
+#define OPENVECTOR_ARCH             OPENVECTOR_ARCH_PPC  
+#endif
+
+#if defined(__powerpc64__) || (OPENVECTOR_ARCH_PPC && defined(__64BIT__))
+#define OPENVECTOR_ARCH             OPENVECTOR_ARCH_PPC_64  
+#endif
+
+#if defined(__arm__) 
+#define OPENVECTOR_ARCH             OPENVECTOR_ARCH_ARM
+#endif
+
+#ifdef __riscv && __riscv_xlen == 32
+#define OPENVECTOR_ARCH             OPENVECTOR_ARCH_RISCV32
+#endif
+
+#ifdef __riscv && __riscv_xlen == 64
+#define OPENVECTOR_ARCH             OPENVECTOR_ARCH_RISCV64
+#endif
+
+
+#if defined(__loongarch64__) || defined(__loongarch64) || \
+    (defined(__loongarch_grlen) && __loongarch_grlen == 64)
+    #define OPENVECTOR_ARCH             OPENVECTOR_ARCH_LOONGARCH64
+#endif
+
+#if defined(__loongarch__) && OPENVECTOR_ARCH != OPENVECTOR_ARCH_LOONGARCH64
+#define OPENVECTOR_ARCH             OPENVECTOR_ARCH_LOONGARCH32
+#endif
+
+#if !defined(OPENVECTOR_ARCH)
+#error "Must not detect more than one architecture"
+#endif
+
+// ORDER
+#if OPENVECTOR_COMPILER   ==  OPENVECTOR_COMPILER_MSVC
+#if OPENVECTOR_ARCH_PPC && defined(_XBOX_VER) && _XBOX_VER >= 200
+// XBox 360 is big-endian
+    #define OPENVECTOR_BYTE_ORDER   OPENVECTOR_BIG_ENDIAN
+#else
+    #define OPENVECTOR_BYTE_ORDER   OPENVECTOR_LITTLE_ENDIAN
+#endif  // HWY_ARCH_PPC && defined(_XBOX_VER) && _XBOX_VER >= 200
+#elif defined(__BYTE_ORDER__) && defined(__ORDER_LITTLE_ENDIAN__) && __BYTE_ORDER__ == __ORDER_LITTLE_ENDIAN__
+    #define OPENVECTOR_BYTE_ORDER   OPENVECTOR_LITTLE_ENDIAN
+#elif defined(__BYTE_ORDER__) && defined(__ORDER_BIG_ENDIAN__) && __BYTE_ORDER__ == __ORDER_BIG_ENDIAN__
+    #define OPENVECTOR_BYTE_ORDER   OPENVECTOR_BIG_ENDIAN
+#else
+#error "Unable to detect endianness or unsupported byte order"
+#endif
+
+#if !defined(OPENVECTOR_BYTE_ORDER )
+#error "Must only detect one byte order"
+#endif
+
+// SIMD
+#include "OVTsimd.h"
+
+// ------------------------------ HWY_ARCH_X86
+#if (OPENVECTOR_ARCH == OPENVECTOR_ARCH_X86_64) ||  (OPENVECTOR_ARCH == OPENVECTOR_ARCH_X86_32)
+#if (OPENVECTOR_SIMD_HAVE_SSE2    == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+#define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_SSE2
+#endif
+
+#if (OPENVECTOR_SIMD_HAVE_SSE3 == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+#define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_SSE3
+#endif
+
+#if (OPENVECTOR_SIMD_HAVE_SSE4_1 == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+#define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_SSE41
+#endif
+
+#if (OPENVECTOR_SIMD_HAVE_SSE4_2 == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+#define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_SSE42
+#endif
+
+#if (OPENVECTOR_SIMD_HAVE_AVX == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+#define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_AVX
+#endif
+
+#if (OPENVECTOR_SIMD_HAVE_AVX2 == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+#define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_AVX2
+#endif
+
+#if (OPENVECTOR_SIMD_HAVE_AVX512BW == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+#define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_AVX512
+#endif
+
+#endif // (OPENVECTOR_COMPILER == OPENVECTOR_ARCH_X86_64) ||  (OPENVECTOR_COMPILER == OPENVECTOR_ARCH_X86_32)
+
+// ARM
+#if (OPENVECTOR_ARCH == OPENVECTOR_ARCH_ARM) ||  (OPENVECTOR_ARCH == OPENVECTOR_ARCH_ARM64)
+
+#if (__ARM_NEON == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+    #if OPENVECTOR_ARCH == OPENVECTOR_ARCH_ARM
+        #define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_NEON
+    #else
+        #define OPENVECTOR_TECHNIQ_USED     "OPENVECTOR_TECHNIQ_NEON64
+    #endif //  OPENVECTOR_ARCH == OPENVECTOR_ARCH_ARM
+#endif
+
+#if (OPENVECTOR_SIMD_HAVE_SVE == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+#define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_SVE
+#endif
+
+#if (OPENVECTOR_SIMD_HAVE_SVE2 == 1) 
+#undef OPENVECTOR_TECHNIQ_USED  
+#define OPENVECTOR_TECHNIQ_USED     OPENVECTOR_TECHNIQ_SVE2
+#endif
+
+#endif // (OPENVECTOR_ARCH == OPENVECTOR_ARCH_ARM) ||  (OPENVECTOR_ARCH == OPENVECTOR_ARCH_ARM64)
+
+#ifndef OPENVECTOR_TECHNIQ_USED
+#define OPENVECTOR_TECHNIQ_USED OPENVECTOR_TECHNIQ_FALLBACK
+#endif
+
+#endif

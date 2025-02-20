@@ -25,9 +25,18 @@ static const struct name_address_pair OVTx_FUNCTIONs[] = {
    OVT_FUNCTIONS(ovt_fast_ushort_create),
    OVT_FUNCTIONS(ovt_fast_sint_create),
    OVT_FUNCTIONS(ovt_fast_uint_create),
+
+   OVT_FUNCTIONS(ovt_fast_schar_destroy),
+   OVT_FUNCTIONS(ovt_fast_uchar_destroy),
+   OVT_FUNCTIONS(ovt_fast_sshort_destroy),
+   OVT_FUNCTIONS(ovt_fast_ushort_destroy),
+   OVT_FUNCTIONS(ovt_fast_sint_destroy),
+   OVT_FUNCTIONS(ovt_fast_uint_destroy),
 #if OPENVECTOR_SUPPORT_INT64 == 1
    OVT_FUNCTIONS(ovt_fast_slong_create),
    OVT_FUNCTIONS(ovt_fast_ulong_create),
+   OVT_FUNCTIONS(ovt_fast_slong_destroy),
+   OVT_FUNCTIONS(ovt_fast_ulong_destroy),
 #endif // OPENVECTOR_SUPPORT_INT64 == 1
 
    OVT_FUNCTIONS(ovt_fast_type_reset),
@@ -45,6 +54,8 @@ static const struct name_address_pair OVTx_FUNCTIONs[] = {
 #if OVECTOR_VERSION_1_1 == 1
    OVT_FUNCTIONS(ovt_fast_float_create),
    OVT_FUNCTIONS(ovt_fast_double_create),
+   OVT_FUNCTIONS(ovt_fast_float_destroy),
+   OVT_FUNCTIONS(ovt_fast_double_destroy),
 #endif
 
    {NULL, NULL}                 /* end of list */

@@ -1,22 +1,23 @@
-project('OpenVeTr', ['cpp', 'c'],
+project('pVctr', ['cpp', 'c'],
           version: '0.1.0',
     meson_version: '>= 1.0.0',
-  default_options: [ 'warning_level=2', 'werror=false', 'cpp_std=gnu++2a', 'c_std=c2x' ],
+  default_options: [ 'warning_level=2', 'werror=false', 'cpp_std=gnu++20', 'c_std=c2x' ],
 )
 project_description = 'A libary for easy vector with simd'
 
 project_headers = [
-  'include/internal/OVTplatform.h',
-  'include/internal/OVTsimd.h',
-  'include/OVT.h',
-  'include/OVTUtils.h',
-  'include/OVTfasttype.h'
+  'include/internal/PVCTRplatform.h',
+  'include/internal/PVCTRTsimd.h',
+  'include/PVCTR.h',
+  'include/PVCTRUtils.h',
+  'include/PVCTRfasttype.h',
+  'include/PVCTRerror.h'
 ]
 
 project_source_files = [
-  'src/OVT.c',
-  'src/OVTUtils.c',
-  'src/OVTfasttype.c'
+  'src/pvctr_base.c',
+  'src/pvctr_utils.c',
+  'src/pvctr_fasttype.c'
 ]
 
 
@@ -61,7 +62,7 @@ set_variable(meson.project_name() + '_dep', project_dep)
 
 # Make this library usable from the system's
 # package manager.
-install_headers(project_headers, subdir : 'OpenVT')
+install_headers(project_headers, subdir : 'pVctr')
 
 pkg_mod = import('pkgconfig')
 pkg_mod.generate(

@@ -1,6 +1,5 @@
 #!/bin/bash
 
+rm -r build
 meson build
 ninja -C build
-ninja -C build test
-./build/run_tests

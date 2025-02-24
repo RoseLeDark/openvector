@@ -1,4 +1,4 @@
-# openvector
+# libpvkr Portable Vector  
 
 Meson Build File Examples
 =========================

@@ -23,23 +23,21 @@ typedef struct { \
         pvr_bit_t bits[Bits]; \
     }; \
     size_t count;  \
-} TName; 
+} TName;
 
 #if PVCTR_VERSION_1_0 == 1
 
-PVCTR_FAST_TYPE(sizeof(pvr_schar_t)    * CHAR_BIT, pvr_schar_t,   pvr_fast_schar_t);
-PVCTR_FAST_TYPE(sizeof(pvr_uchar_t)    * CHAR_BIT, pvr_uchar_t,   pvr_fast_uchar_t);
-PVCTR_FAST_TYPE(sizeof(pvr_sshort_t)   * CHAR_BIT, pvr_sshort_t,  pvr_fast_sshort_t);
-PVCTR_FAST_TYPE(sizeof(pvr_ushort_t)   * CHAR_BIT, pvr_ushort_t,  pvr_fast_ushort_t);
-PVCTR_FAST_TYPE(sizeof(pvr_sint_t)     * CHAR_BIT, pvr_sint_t,    pvr_fast_sint_t);
-PVCTR_FAST_TYPE(sizeof(pvr_uint_t)     * CHAR_BIT, pvr_uint_t,    pvr_fast_uint_t);
+PVCTR_FAST_TYPE(sizeof(pvr_schar_t)    * CHAR_BIT, pvr_schar_t,   pvr_fast_schar_t)
+PVCTR_FAST_TYPE(sizeof(pvr_uchar_t)    * CHAR_BIT, pvr_uchar_t,   pvr_fast_uchar_t)
+PVCTR_FAST_TYPE(sizeof(pvr_sshort_t)   * CHAR_BIT, pvr_sshort_t,  pvr_fast_sshort_t)
+PVCTR_FAST_TYPE(sizeof(pvr_ushort_t)   * CHAR_BIT, pvr_ushort_t,  pvr_fast_ushort_t)
+PVCTR_FAST_TYPE(sizeof(pvr_sint_t)     * CHAR_BIT, pvr_sint_t,    pvr_fast_sint_t)
+PVCTR_FAST_TYPE(sizeof(pvr_uint_t)     * CHAR_BIT, pvr_uint_t,    pvr_fast_uint_t)
+PVCTR_FAST_TYPE(sizeof(pvr_float_t)    * CHAR_BIT, pvr_float_t,   pvr_fast_float_t)
+PVCTR_FAST_TYPE(sizeof(pvr_double_t)    * CHAR_BIT, pvr_double_t,   pvr_fast_double_t)
 
-PVCTR_FAST_TYPE(sizeof(pvr_float_t)    * CHAR_BIT, pvr_float_t,   pvr_fast_float_t);
-
-PVCTR_FAST_TYPE(sizeof(pvr_double_t)    * CHAR_BIT, pvr_double_t,   pvr_fast_double_t);
-
-PVCTR_FAST_TYPE(sizeof(pvr_slong_t)    * CHAR_BIT, pvr_slong_t,   pvr_fast_slong_t);
-PVCTR_FAST_TYPE(sizeof(pvr_ulong_t)    * CHAR_BIT, pvr_ulong_t,   pvr_fast_ulong_t);
+PVCTR_FAST_TYPE(sizeof(pvr_slong_t)    * CHAR_BIT, pvr_slong_t,   pvr_fast_slong_t)
+PVCTR_FAST_TYPE(sizeof(pvr_ulong_t)    * CHAR_BIT, pvr_ulong_t,   pvr_fast_ulong_t)
 
 typedef pvr_uchar_t (APIENTRYP PFPVRFASTSCHARCREATEPROC) (pvr_fast_schar_t *type, const pvr_schar_t value); 
 typedef pvr_uchar_t (APIENTRYP PFPVRFASTUCHARCREATEPROC) (pvr_fast_uchar_t *type, const pvr_uchar_t value); 
@@ -59,6 +57,8 @@ typedef pvr_void_t (APIENTRYP PFPVRFASTTYPELESSPROC) (const volatile pvr_void_t 
 typedef pvr_void_t (APIENTRYP PFPVRFASTTYPEGREATEREQUALPROC) (const volatile pvr_void_t *a, const volatile pvr_void_t *b); 
 typedef pvr_void_t (APIENTRYP PFPVRFASTTYPELESSEQUALPROC) (const volatile pvr_void_t *a, const volatile pvr_void_t *b); 
 
+#ifdef PVCTR_PROTOTYPES
+
 VECTORAPI pvr_uchar_t APIENTRY pvr_fast_schar_create(pvr_fast_schar_t *type, const pvr_schar_t value);
 VECTORAPI pvr_uchar_t APIENTRY pvr_fast_uchar_create(pvr_fast_uchar_t *type, const pvr_uchar_t value);
 VECTORAPI pvr_uchar_t APIENTRY pvr_fast_sshort_create(pvr_fast_sshort_t *type, const pvr_sshort_t value);
@@ -75,6 +75,8 @@ VECTORAPI pvr_bool_t APIENTRY pvr_fast_type_greater(const volatile pvr_void_t *a
 VECTORAPI pvr_bool_t APIENTRY pvr_fast_type_less(const volatile pvr_void_t *a, const volatile pvr_void_t *b);
 VECTORAPI pvr_bool_t APIENTRY pvr_fast_type_greater_eq(const volatile pvr_void_t *a, const volatile pvr_void_t *b);
 VECTORAPI pvr_bool_t APIENTRY pvr_fast_type_less_eq(const volatile pvr_void_t *a, const volatile pvr_void_t *b);
+#endif
+
 #endif
 
 

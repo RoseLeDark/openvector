@@ -1,5 +1,5 @@
 #!/bin/bash
 
 rm -r build
-meson build
+meson setup build 
 ninja -C build

@@ -15,16 +15,16 @@ VECTORAPI pvr_uchar_t TFunc##_create(TName *type, const TVal value) { \
     return PVCTR_OK; \
 } 
 
-PVR_FAST_TYPE_CREATE(pvr_fast_schar_t,     pvr_fast_schar, pvr_schar_t);
-PVR_FAST_TYPE_CREATE(pvr_fast_uchar_t,     pvr_fast_uchar, pvr_uchar_t);
-PVR_FAST_TYPE_CREATE(pvr_fast_sshort_t,    pvr_fast_sshort, pvr_sshort_t);
-PVR_FAST_TYPE_CREATE(pvr_fast_ushort_t,    pvr_fast_ushort, pvr_ushort_t);
-PVR_FAST_TYPE_CREATE(pvr_fast_sint_t,      pvr_fast_sint, pvr_sint_t);
-PVR_FAST_TYPE_CREATE(pvr_fast_uint_t,      pvr_fast_uint, pvr_uint_t);
-PVR_FAST_TYPE_CREATE(pvr_fast_float_t,     pvr_fast_float, pvr_float_t);
-PVR_FAST_TYPE_CREATE(pvr_fast_double_t,    pvr_fast_double, pvr_double_t);
-PVR_FAST_TYPE_CREATE(pvr_fast_slong_t,     pvr_fast_slong, pvr_slong_t);
-PVR_FAST_TYPE_CREATE(pvr_fast_ulong_t,     pvr_fast_ulong, pvr_ulong_t);
+PVR_FAST_TYPE_CREATE(pvr_fast_schar_t,     pvr_fast_schar, pvr_schar_t)
+PVR_FAST_TYPE_CREATE(pvr_fast_uchar_t,     pvr_fast_uchar, pvr_uchar_t)
+PVR_FAST_TYPE_CREATE(pvr_fast_sshort_t,    pvr_fast_sshort, pvr_sshort_t)
+PVR_FAST_TYPE_CREATE(pvr_fast_ushort_t,    pvr_fast_ushort, pvr_ushort_t)
+PVR_FAST_TYPE_CREATE(pvr_fast_sint_t,      pvr_fast_sint, pvr_sint_t)
+PVR_FAST_TYPE_CREATE(pvr_fast_uint_t,      pvr_fast_uint, pvr_uint_t)
+PVR_FAST_TYPE_CREATE(pvr_fast_float_t,     pvr_fast_float, pvr_float_t)
+PVR_FAST_TYPE_CREATE(pvr_fast_double_t,    pvr_fast_double, pvr_double_t)
+PVR_FAST_TYPE_CREATE(pvr_fast_slong_t,     pvr_fast_slong, pvr_slong_t)
+PVR_FAST_TYPE_CREATE(pvr_fast_ulong_t,     pvr_fast_ulong, pvr_ulong_t)
 
 
 PVCTR_FAST_TYPE(MB_LEN_MAX * CHAR_BIT, void*,   pvr_fast_voidp_t);

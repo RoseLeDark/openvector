@@ -213,6 +213,10 @@
 #else
 #define PVCTR_SIMD_HAVE_FULL_AVX512_ABI 0
 #endif
-
-
+/*
+#define PVCTR_simd_neon             PVCTR_SIMD_HAVE_NEON
+#define PVCTR_simd_neon64           PVCTR_SIMD_HAVE_NEON_A64
+#define PVCTR_simd_sve              PVCTR_SIMD_HAVE_SVE
+#define PVCTR_simd_sve2             PVCTR_SIMD_HAVE_SVE2
+*/
 #endif

@@ -4,6 +4,9 @@
 #define PVCTR_PROTOTYPES 1
 #include "PVCTR.h"
 #include <string.h>
+#include <stdlib.h>
+
+static pvr_context_t* __static_libcurrent = NULL;
 
 #if (PVCTR_TARGET_SYSTEM == PVCTR_TARGET_WINDOWS)
 #include <stdio.h>
@@ -129,37 +132,39 @@ pvr_uchar_t pvr_context_highest_tech(const pvr_uchar_t requested_api) {
 }
 #endif 
 
-VECTORAPI pvr_schar_t APIENTRY pvr_context_create(const pvr_uchar_t id,  const void* args, pvr_context_t* context) {
-    if(context == NULL) return PVCTR_ERROR_NULL_PTR;
+VECTORAPI pvr_context_t* APIENTRY pvr_context_create(const pvr_uchar_t id,  const void* args, const pvr_size_t sargs) {
+
     pvr_schar_t used  = pvr_context_highest_tech(id);
-    pvr_schar_t _ret = 0;
+    pvr_context_t *_ret = 0;
     switch (used)  {
     case PVCTR_TECHNIQ_X64_AVX512:
-        _ret = pvr_context_createex("AVX2-System", args, context); break;
+        _ret = pvr_context_createex("AVX2-System", args, sargs); break;
     case PVCTR_TECHNIQ_X64_AVX2:
-        _ret = pvr_context_createex("AVX2-System", args, context); break;
+        _ret = pvr_context_createex("AVX2-System", args, sargs); break;
     case PVCTR_TECHNIQ_X64_AVX:
-        _ret = pvr_context_createex("AVX-System", args, context); break;
+        _ret = pvr_context_createex("AVX-System", args, sargs); break;
     case PVCTR_TECHNIQ_X64_SSE42:
-        _ret = pvr_context_createex("SSE42-System", args, context); break;
+        _ret = pvr_context_createex("SSE42-System", args, sargs); break;
     case PVCTR_TECHNIQ_X64_SSE41:
-        _ret = pvr_context_createex("SSE41-System", args, context); break;
+        _ret = pvr_context_createex("SSE41-System", args, sargs); break;
     case PVCTR_TECHNIQ_X64_SSE3:
-        _ret = pvr_context_createex("SSE3-System", args, context); break;
+        _ret = pvr_context_createex("SSE3-System", args, sargs); break;
     case PVCTR_TECHNIQ_X64_SSE2:
-        _ret = pvr_context_createex("SSE2-System", args, context); break;
+        _ret = pvr_context_createex("SSE2-System", args, sargs); break;
     default:
-        _ret =pvr_context_createex("CPU", args, context); break;
+        _ret =pvr_context_createex("CPU", args, sargs); break;
     }
     return _ret;
 }
 
-VECTORAPI pvr_schar_t APIENTRY pvr_context_createex(const pvr_string_t technic_name, const void* args, pvr_context_t* context) {
-    if(context == NULL) return PVCTR_ERROR_NULL_PTR;
-    if(pvr_techniq_avaible(technic_name) != PVR_TRUE) { return PVCTR_ERROR_NSUPPORT; }
+VECTORAPI pvr_context_t* APIENTRY pvr_context_createex(const pvr_string_t technic_name, const void* args, const pvr_size_t sargs) {
+    pvr_context_t*  context = (pvr_context_t*)malloc(sizeof(pvr_context_t));
+
+    if(context == 0) return NULL;
+    if(pvr_techniq_avaible(technic_name) != PVR_TRUE) { return NULL; }
 
     pvr_techniq_func* techniq_proc = pvr_techniq_get(technic_name);
-    if(techniq_proc == NULL) { return PVCTR_ERROR_NSUPPORT; }
+    if(techniq_proc == NULL) { return NULL; }
 
     pvr_techniq_create_simd *tech_create = techniq_proc("pvr_techniq_create");
     if(tech_create != NULL) { 
@@ -169,11 +174,18 @@ VECTORAPI pvr_schar_t APIENTRY pvr_context_createex(const pvr_string_t technic_n
     context->technic_name = technic_name;
     context->techniq_proc = techniq_proc;
 
-    return  PVCTR_OK;
+    return  context;
 }
 
 VECTORAPI pvr_schar_t APIENTRY pvr_context_api_geterror(const pvr_context_t* context) {
     if(context == NULL) return PVCTR_ERROR_NULL_PTR;
 
     return context->last_api_error;
+}
+VECTORAPI pvr_void_t  APIENTRY pvr_context_make_current(const pvr_context_t* context) {
+    if(context == NULL) return;
+    memcpy(__static_libcurrent, context, sizeof(pvr_context_t));
+}
+VECTORAPI pvr_context_t*  APIENTRY pvr_context_current() {
+    return __static_libcurrent;
 }

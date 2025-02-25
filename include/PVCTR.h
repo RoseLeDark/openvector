@@ -200,7 +200,6 @@ typedef struct {
     union { struct { pvr_float_t m11, m12, m21, m22; };  pvr_float_t e[4]; }; 
 } pvr_mat2x2f;
 
-
 typedef struct { 
     union { struct { pvr_float_t m11, m12, m13, m21, m22, m23; };  pvr_float_t e[6]; }; 
 } pvr_mat2x3f;
@@ -232,6 +231,10 @@ typedef struct {
 typedef struct { 
     union { struct { pvr_float_t m11, m12, m13, m14, m21, m22, m23, m24, m31, m32, m33, m34, m41, m42, m43, m44; };  pvr_float_t e[16]; }; 
 } pvr_mat4x4f;
+
+typedef struct { 
+    union { struct { pvr_double_t m11, m12, m21, m22; };  pvr_float_t e[4]; }; 
+} pvr_mat2x2d;
 
 typedef struct { 
     union { struct { pvr_double_t m11, m12, m13, m21, m22, m23; };  pvr_double_t e[6]; }; 
@@ -277,11 +280,13 @@ typedef pvr_bool_t (APIENTRYP PFPVRTECHNIQAVAIBLEPROC)(pvr_string_t technic_name
 typedef pvr_bool_t (APIENTRYP PFPVRTECHNIQUNSETPROC)(pvr_string_t technic_name);
 typedef pvr_techniq_func* (APIENTRYP PFPVRTECHNIQGETPROC)(pvr_string_t technic_name);
 typedef pvr_pointer_t (APIENTRYP PFPVRGETTECNICGETFUNCPROC)(pvr_string_t technic_name, pvr_string_t funcName);
+typedef pvr_schar_t (APIENTRYP PFPVRPVRMAININITFUNCPROC)(int argc, char *argv[]); 
 
 typedef void (*pvr_funcptr)(void);
 VECTORAPI pvr_funcptr APIENTRY pvr_get_proc_addressex (pvr_string_t funcName);
 VECTORAPI pvr_pointer_t APIENTRY pvr_get_proc_address(pvr_string_t funcName);
 
+VECTORAPI pvr_schar_t APIENTRY pvr_main_init(char ***argv, int *argc);
 /*
  * Techniq_Simd_functs
  */
@@ -296,10 +301,13 @@ VECTORAPI pvr_bool_t  APIENTRY  pvr_techniq_avaible(pvr_string_t technic_name);
 VECTORAPI pvr_bool_t  APIENTRY  pvr_techniq_unset(pvr_string_t technic_name);
 VECTORAPI pvr_techniq_func*  APIENTRY  pvr_techniq_get(pvr_string_t technic_name);
 VECTORAPI pvr_pointer_t APIENTRY  pvr_techniq_get_func(pvr_string_t technic_name, pvr_string_t funcName);
-
-VECTORAPI pvr_schar_t APIENTRY pvr_context_create(const pvr_uchar_t id,  const void* args, pvr_context_t* context);
-VECTORAPI pvr_schar_t APIENTRY pvr_context_createex(const pvr_string_t technic_name, const void* args, pvr_context_t* context);
+//----------
+VECTORAPI pvr_context_t* APIENTRY pvr_context_create(const pvr_uchar_t id,  const void* args, const pvr_size_t sargs);
+VECTORAPI pvr_context_t* APIENTRY pvr_context_createex(const pvr_string_t technic_name, const void* args, const pvr_size_t sargs);
 VECTORAPI pvr_schar_t APIENTRY pvr_context_api_geterror(const pvr_context_t* context);
+VECTORAPI pvr_void_t  APIENTRY pvr_context_make_current(const pvr_context_t* context);
+VECTORAPI pvr_context_t* APIENTRY pvr_context_current();
+
 
 VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_vec2c(pvr_vec2c* pvec, const pvr_schar_t x, const pvr_schar_t y);
 VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_vec3c(pvr_vec3c* pvec, const pvr_schar_t x, const pvr_schar_t y, const pvr_schar_t z);
@@ -371,11 +379,20 @@ VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat43f(pvr_mat4x3f *pmat, pvr_f
 VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat34f(pvr_mat3x4f *pmat, pvr_float_t m[12]);
 VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat42f(pvr_mat4x2f *pmat, pvr_float_t m[8]);
 VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat24f(pvr_mat2x4f *pmat, pvr_float_t m[8]);
-
 VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat33f(pvr_mat3x3f *pmat, pvr_float_t m[9]);
 VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat32f(pvr_mat3x2f *pmat, pvr_float_t m[6]);
 VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat23f(pvr_mat2x3f *pmat, pvr_float_t m[6]);
 VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat22f(pvr_mat2x2f *pmat, pvr_float_t m[4]);
+
+VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat44d(pvr_mat4x4d *pmat, pvr_double_t m[16]);
+VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat43d(pvr_mat4x3d *pmat, pvr_double_t m[12]);
+VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat34d(pvr_mat3x4d *pmat, pvr_double_t m[12]);
+VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat42d(pvr_mat4x2d *pmat, pvr_double_t m[8]);
+VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat24d(pvr_mat2x4d *pmat, pvr_double_t m[8]);
+VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat33d(pvr_mat3x3d *pmat, pvr_double_t m[9]);
+VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat32d(pvr_mat3x2d *pmat, pvr_double_t m[6]);
+VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat23d(pvr_mat2x3d *pmat, pvr_double_t m[6]);
+VECTORAPI pvr_schar_t APIENTRY pvr_vector_create_mat22d(pvr_mat2x2d *pmat, pvr_double_t m[4]);
 
 #endif // PVCTR_PROTOTYPES
 
